@@ -1,0 +1,274 @@
+<div id="wrap">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="#">Muzima</a>
+
+                <form class="navbar-search pull-right">
+                    <input type="text" placeholder="Search" class="search-query">
+                </form>
+
+                <div class="nav-collapse collapse pull-right">
+                    <ul class="nav">
+                        <li><a href="#/home">Home</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#/cohorts">Cohorts</a></li>
+                        <li><a href="#/settings">Settings</a></li>
+                        <li><a href="#/about">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h4>{{patient.givenName}} {{patient.middleName}} {{patient.familyName}}</h4>
+
+            <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Action
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#/patient/{{patient.uuid}}">View Demographic</a></li>
+                    <li><a href="#/observation/{{patient.uuid}}">View Observation</a></li>
+                    <li><a href="#/summary/{{patient.uuid}}">View Summary</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#/reminder/{{patient.uuid}}">View Reminder</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#/forms/{{patient.uuid}}">Fill Form</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="well">
+                    <form id="jsonForm"></form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="push"></div>
+    <div id="footer-content" ng-include="footer.html"></div>
+</div>
+
+<script type="text/javascript">
+
+var values =
+{
+    "value": {
+        "patient": {
+            "givenName": "Testarius",
+            "middleName": "Paul",
+            "familyName": "Kungu",
+            "birth": "1992-Oct-15",
+            "birthEstimated": true,
+            "gender": "Male"
+        },
+        "default": {
+            "datetime": "2013-02-18"
+        }
+    }
+};
+
+var display =
+{
+    "form": [
+        {
+            "type": "fieldset",
+            "title": "Patient Demographic",
+            "items": [
+                "patient.givenName",
+                "patient.familyName", "patient.birth", "patient.birthEstimated",
+                "patient.age",
+                {
+                    "key": "patient.gender",
+                    "titleMap": {
+                        "male": "Male!",
+                        "female": "Female!",
+                        "na": "Unknown!"
+                    }
+                }]
+        },
+        {
+            "type": "fieldset",
+            "title": "Observation",
+            "items": [
+                {
+                    "key": "observation[0].value",
+                    "title": "CD4 Value"
+                },
+                {
+                    "key": "observation[0].datetime",
+                    "type": "hidden",
+                    "value": "{{values.default.datetime}}"
+                },
+                {
+                    "key": "observation[1].value",
+                    "title": "Pregnancy Status"
+                },
+                {
+                    "key": "observation[1].datetime",
+                    "type": "hidden",
+                    "value": "{{values.default.datetime}}"
+                }
+            ]
+        },
+        "encounter",
+        {
+            "type": "actions",
+            "items": [
+                {
+                    "type": "submit",
+                    "title": "Submit"
+                },
+                {
+                    "type": "button",
+                    "title": "Cancel"
+                }
+            ]
+        }
+    ]
+};
+
+var schema =
+{
+    "schema": {
+        "patient": {
+            "type": "object",
+            "title": "Patient Demographic",
+            "properties": {
+                "birth": {
+                    "type": "string",
+                    "title": "Birth",
+                    "maxLength": 10
+                },
+                "birthEstimated": {
+                    "type": "boolean",
+                    "title": "Estimated Birth"
+                },
+                "givenName": {
+                    "type": "string",
+                    "title": "Given Name"
+                },
+                "familyName": {
+                    "type": "string",
+                    "title": "Family Name"
+                },
+                "identifier": {
+                    "type": "string",
+                    "title": "Identifier"
+                },
+                "gender": {
+                    "type": "string",
+                    "title": "Gender",
+                    "enum": [ "male", "female", "na" ]
+                },
+                "age": {
+                    "type": "integer",
+                    "title": "Age"
+                }
+            }
+        },
+        "observation": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "title": "Question",
+                            "default": "CD4 COUNT"
+                        },
+                        "code": {
+                            "type": "integer",
+                            "title": "Coded Question",
+                            "default": 1114
+                        },
+                        "value": {
+                            "type": "string",
+                            "title": "Value"
+                        },
+                        "type": {
+                            "type": "string",
+                            "title": "Type",
+                            "default": "numeric"
+                        },
+                        "datetime": {
+                            "type": "string",
+                            "title": "Observation Date"
+                        }
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "title": "Question",
+                            "default": "PREGNANCY STATUS"
+                        },
+                        "code": {
+                            "type": "integer",
+                            "title": "Coded Question",
+                            "default": 1115
+                        },
+                        "value": {
+                            "type": "string",
+                            "title": "Value"
+                        },
+                        "type": {
+                            "type": "string",
+                            "title": "Type",
+                            "default": "coded"
+                        },
+                        "datetime": {
+                            "type": "string",
+                            "title": "Observation Date"
+                        }
+                    }
+                }
+            ]
+        },
+        "encounter": {
+            "type": "object",
+            "title": "Encounter",
+            "properties": {
+                "form": {
+                    "type": "integer",
+                    "title": "Form"
+                },
+                "datetime": {
+                    "type": "string",
+                    "title": "Encounter Date",
+                    "maxLength": 10
+                },
+                "location": {
+                    "type": "integer",
+                    "title": "Encounter Location"
+                },
+                "provider": {
+                    "type": "integer",
+                    "title": "Encounter Provider"
+                }
+            }
+        }
+    },
+    "onSubmit": function (errors, values) {
+        if (console && console.log) {
+            console.log('Values extracted from submitted form', values);
+        }
+        alert('Form submitted. Values object:\n' + JSON.stringify(values, null, 2));
+    }
+};
+
+var form = $.extend(schema, display, values);
+$('#jsonForm').jsonForm(form);
+</script>
+

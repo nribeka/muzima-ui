@@ -1,0 +1,47 @@
+<div id="wrap">
+    <div class="container">
+        <div class="row-fluid">
+            <span class="span12 error">{{message}}</span>
+        </div>
+        <form class="form-login" ng-submit="validate()">
+            <div class="control-group">
+                <label for="inputUsername" class="control-label">Username</label>
+
+                <div class="controls">
+                    <input type="text" class="input-block-level" id="inputUsername" ng-model="username">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="inputPassword" class="control-label">Password</label>
+
+                <div class="controls">
+                    <input type="password" class="input-block-level" id="inputPassword" ng-model="password">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button class="btn" type="submit">Sign in</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="push"></div>
+</div>
+<div id="footer">
+    <div class="container">
+        <div class="row-fluid">
+            <span class="span12">
+                <p class="text-center">
+                    <small><a>Need login help?</a></small>
+                </p>
+            </span>
+        </div>
+        <div class="row-fluid">
+            <span class="span12">
+                <p class="text-center">
+                    <em>By signing in, agree to muzima's terms of service and privacy policy.</em>
+                </p>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+<div id="wrap">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="#">Muzima</a>
+
+                <form class="navbar-search pull-right">
+                    <input type="text" placeholder="Search" class="search-query">
+                </form>
+
+                <div class="nav-collapse collapse pull-right">
+                    <ul class="nav">
+                        <li><a href="#/home">Home</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#/cohorts">Cohorts</a></li>
+                        <li class="active"><a href="#/settings">Settings</a></li>
+                        <li><a href="#/about">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h3>Configure Muzima</h3>
+            {{message}}
+        </div>
+        <form>
+            <div class="control-group">
+                <label class="control-label" for="inputServer">OpenMRS Server</label>
+
+                <div class="controls">
+                    <input type="password" id="inputServer" placeholder="Server URL">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <button type="submit" class="btn">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="push"></div>
+    <div id="footer-content" ng-include="footer.html"></div>
+</div>

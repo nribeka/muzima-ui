@@ -1,0 +1,60 @@
+<div id="wrap">
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="brand" href="#">Muzima</a>
+
+                <form class="navbar-search pull-right">
+                    <input type="text" placeholder="Search" class="search-query">
+                </form>
+
+                <div class="nav-collapse collapse pull-right">
+                    <ul class="nav">
+                        <li><a href="#/home">Home</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#/cohorts">Cohorts</a></li>
+                        <li><a href="#/settings">Settings</a></li>
+                        <li><a href="#/about">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h3>{{name}} Members</h3>
+        </div>
+        <div>
+            <ul class="muzima-list">
+                <li class="media" ng-repeat="patient in patients">
+                    <a href="#/patient/{{patient.uuid}}" class="pull-left">
+            <span ng-switch on="patient.gender">
+                <span class="pull-left" ng-switch-when="Female">
+                    <img src="img/female.svg" width="50px" class="media-object img-rounded">
+                </span>
+                <span class="pull-left" ng-switch-when="Male">
+                    <img src="img/male.svg" width="50px" class="media-object img-rounded">
+                </span>
+            </span>
+                    </a>
+
+                    <div class="media-body">
+                        <a href="#/patient/{{patient.uuid}}">
+                            <h4 class="media-heading">{{patient.identifier}}</h4>
+                            {{patient.givenName}} {{patient.middleName}} {{patient.familyName}}
+                            <i class="icon-chevron-right"></i>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <span>Available patients: {{patients.length}}</span>
+        </div>
+    </div>
+    <div id="push"></div>
+    <div id="footer-content" ng-include="footer.html"></div>
+</div>
