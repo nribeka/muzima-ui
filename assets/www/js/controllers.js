@@ -113,37 +113,57 @@ var forms = [
     }
 ];
 
-function LoginController($scope, $location, userService, user) {
-    // http://stackoverflow.com/questions/11541695/angular-js-redirecting-to-a-certain-route-based-on-condition
+function LoginController($scope, $location, $userService, $authentication) {
+    var updateAuthentication = function (username, password, authenticated) {
+        $authentication.username = username;
+        $authentication.password = password;
+        $authentication.authenticated = authenticated;
+    }
+
+    var success = function () {
+        updateAuthentication($scope.username, $scope.password, true);
+        $location.path("/home");
+    }
+
+    var error = function (message) {
+        $scope.message = message;
+    }
+
     $scope.validate = function () {
-        userService.authenticate($scope.username, $scope.password, "http://149.166.42.178:8081/openmrs-standalone",
-            function () {
-                user.username = $scope.username;
-                user.authenticated = true;
-                $location.path("/home");
-            }, function (message) {
-                $scope.message = message;
-            });
+        $userService.authenticate($scope.username, $scope.password,
+            "http://149.166.42.178:8081/openmrs-standalone",
+            success, error);
     }
 }
-LoginController.$inject = ['$scope', '$location', 'userService', 'user'];
+LoginController.$inject = ['$scope', '$location', '$userService', '$authentication'];
 
 
-function HomeController($scope, user) {
-    userService.getUserByUsername(user.username,
-        function(data) {
-            $scope.user = data;
-        })
+function HomeController($scope, $userService, $authentication) {
+    var success = function (data) {
+        $scope.user = data;
+    }
+    var error = function (message) {
+        $scope.message = message;
+    }
+    $userService.getUserByUsername(authentication.username, success, error);
 }
-HomeController.$inject = ['$scope', 'userService', 'user'];
+HomeController.$inject = ['$scope', '$userService', '$authentication'];
 
-function CohortController($scope) {
-    $scope.cohorts = cohorts;
+function CohortController($scope, $cohortService) {
+    var success = function (data) {
+        $scope.user = data;
+    }
+    var error = function (message) {
+        $scope.message = message;
+    }
+    $cohortService.getAllCohorts(success, error);
 }
+CohortController.$inject = ['$scope', '$cohortService'];
 
 function SettingController($scope) {
     $scope.message = "This message is sent from the setting controller, not from the html.";
 }
+SettingController.$inject = ['$scope', '$setting'];
 
 function AboutController($scope) {
     $scope.message = "This message is sent from the setting controller, not from the html.";
@@ -162,35 +182,41 @@ function PatientsController($scope, $routeParams) {
         }
     });
 }
+PatientsController.$inject = ['$scope', '$routeParams'];
 
 function PatientController($scope, $routeParams) {
     var uuid = $routeParams.uuid;
     $scope.patient = patients[uuid];
 }
+PatientController.$inject = ['$scope', '$routeParams'];
 
 function ObservationController($scope, $routeParams) {
     var uuid = $routeParams.uuid;
     $scope.patient = patients[uuid];
     $scope.observations = observations;
 }
+ObservationController.$inject = ['$scope', '$routeParams'];
 
 function SummaryController($scope, $routeParams) {
     var uuid = $routeParams.uuid;
     $scope.patient = patients[uuid];
     $scope.message = "You should see summary data here.";
 }
+SummaryController.$inject = ['$scope', '$routeParams'];
 
 function ReminderController($scope, $routeParams) {
     var uuid = $routeParams.uuid;
     $scope.patient = patients[uuid];
     $scope.message = "You should see reminder data here.";
 }
+ReminderController.$inject = ['$scope', '$routeParams'];
 
 function FormsController($scope, $routeParams) {
     var uuid = $routeParams.uuid;
     $scope.patient = patients[uuid];
     $scope.forms = forms;
 }
+FormsController.$inject = ['$scope', '$routeParams'];
 
 function FormController($scope, $routeParams) {
     var uuid = $routeParams.uuid;
@@ -198,3 +224,4 @@ function FormController($scope, $routeParams) {
     var formUuid = $routeParams.formUuid;
     $scope.form = forms[formUuid];
 }
+FormController.$inject = ['$scope', '$routeParams'];

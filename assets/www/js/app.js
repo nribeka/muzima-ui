@@ -18,7 +18,7 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
         $routeProvider.when('/form/:uuid|:formUuid', {templateUrl: 'partials/form.html', controller: FormController});
         $routeProvider.otherwise({redirectTo: '/login'});
     }).
-    factory('deviceReady',function () {
+    factory('$deviceReady',function () {
         return function (fn) {
             var queue = [];
             var impl = function () {
@@ -35,25 +35,40 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
             };
         };
     }).
-    factory('userService',function ($rootScope, deviceReady) {
+    factory('$userService',function ($rootScope, $deviceReady) {
         return {
-            authenticate: deviceReady(function (username, password, url, successCallback, errorCallback) {
+            authenticate: $deviceReady(function (username, password, url, successCallback, errorCallback) {
                 userService.authenticate(username, password, url, successCallback, errorCallback);
             }),
-            getUserByUsername: deviceReady(function (username, successCallback, errorCallback) {
+            getUserByUsername: $deviceReady(function (username, successCallback, errorCallback) {
                 userService.getUserByUsername(username, successCallback, errorCallback);
             })
         }
     }).
-    factory('user',function () {
+    factory('$cohortService',function ($rootScope, deviceReady) {
         return {
-            authenticated: false,
-            username: null
+            getAllCohorts: deviceReady(function (successCallback, errorCallback) {
+                cohortService.getAllCohorts(successCallback, errorCallback);
+            }),
+            getCohortsByName: deviceReady(function (name, successCallback, errorCallback) {
+                cohortService.getCohortsByName(name, successCallback, errorCallback);
+            }),
+            getCohortByUuid: deviceReady(function (uuid, successCallback, errorCallback) {
+                cohortService.getCohortByUuid(uuid, successCallback, errorCallback);
+            })
         }
     }).
-    run(function ($rootScope, $location) {
+    factory('$authentication',function () {
+        var authentication = {};
+        authentication.username = null;
+        authentication.password = null;
+        authentication.authenticated = false;
+        return authentication;
+    }).
+    run(function ($rootScope, $location, $authentication) {
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
-            if ($rootScope.authenticated && next.templateUrl != 'partials/login.html') {
+            console.log("Route changes executed");
+            if ($authentication.authenticated && next.templateUrl != 'partials/login.html') {
                 $location.path("/login");
             }
         })
