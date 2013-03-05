@@ -35,6 +35,43 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
             };
         };
     }).
+    factory('$adminService',function ($rootScope, $deviceReady) {
+        var applyCallback = function(callback) {
+            return function () {
+                var that = this,
+                    args = arguments;
+                if (callback) {
+                    $rootScope.$apply(function () {
+                        callback.apply(that, args);
+                    });
+                }
+            }
+        }
+        return {
+            downloadAllForms: $deviceReady(function (successCallback, errorCallback) {
+                adminService.downloadAllForms(
+                    applyCallback(successCallback),
+                    applyCallback(errorCallback));
+            }),
+            downloadAllCohorts: $deviceReady(function (successCallback, errorCallback) {
+                adminService.downloadAllCohorts(
+                    applyCallback(successCallback),
+                    applyCallback(errorCallback));
+            }),
+            downloadPatientsForCohort: $deviceReady(function (cohortUuid, successCallback, errorCallback) {
+                adminService.downloadPatientsForCohort(
+                    cohortUuid,
+                    applyCallback(successCallback),
+                    applyCallback(errorCallback));
+            }),
+            downloadObservationsForPatient: $deviceReady(function (patientUuid, successCallback, errorCallback) {
+                adminService.downloadObservationsForPatient(
+                    patientUuid,
+                    applyCallback(successCallback),
+                    applyCallback(errorCallback));
+            })
+        }
+    }).
     factory('$userService',function ($rootScope, $deviceReady) {
         return {
             authenticate: $deviceReady(function (username, password, url, successCallback, errorCallback) {
@@ -55,6 +92,25 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
             }),
             getCohortByUuid: $deviceReady(function (uuid, successCallback, errorCallback) {
                 cohortService.getCohortByUuid(uuid, successCallback, errorCallback);
+            })
+        }
+    }).
+    factory('$patientService',function ($rootScope, $deviceReady) {
+        return {
+            getAllPatients: $deviceReady(function (successCallback, errorCallback) {
+                patientService.getAllPatients(successCallback, errorCallback);
+            }),
+            getPatientsByCohort: $deviceReady(function (cohortUuid, successCallback, errorCallback) {
+                patientService.getPatientsByCohort(cohortUuid, successCallback, errorCallback);
+            }),
+            getPatientsByName: $deviceReady(function (partialName, successCallback, errorCallback) {
+                patientService.getPatientsByName(partialName, successCallback, errorCallback);
+            }),
+            getPatientByIdentifier: $deviceReady(function (identifier, successCallback, errorCallback) {
+                patientService.getPatientByIdentifier(identifier, successCallback, errorCallback);
+            }),
+            getPatientByUuid: $deviceReady(function (patientUuid, successCallback, errorCallback) {
+                patientService.getPatientByUuid(patientUuid, successCallback, errorCallback);
             })
         }
     }).

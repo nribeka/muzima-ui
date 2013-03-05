@@ -67,6 +67,7 @@ public class AdminPlugin extends MuzimaPlugin {
                 public void run() {
                     AdministrativeService service = Context.getInstance(AdministrativeService.class);
                     service.downloadForms();
+                    callbackContext.success("Forms downloaded!");
                 }
             });
         } else if (StringUtil.equals(action, "downloadAllCohorts")) {
@@ -76,16 +77,7 @@ public class AdminPlugin extends MuzimaPlugin {
                 public void run() {
                     AdministrativeService service = Context.getInstance(AdministrativeService.class);
                     service.downloadCohorts();
-
-                    try {
-                        CohortConverter converter = new CohortConverter();
-                        CohortService cohortService = Context.getInstance(CohortService.class);
-                        List<Cohort> cohortList = cohortService.getAllCohorts();
-                        callbackContext.success(converter.serialize(cohortList));
-                    } catch (JSONException e) {
-                        callbackContext.error("Serializing patients failed!");
-                        Log.i(TAG, "Serializing cohorts failed!", e);
-                    }
+                    callbackContext.success("Cohorts downloaded!");
                 }
             });
         } else if (StringUtil.equals(action, "downloadAllPatients")) {
@@ -96,16 +88,7 @@ public class AdminPlugin extends MuzimaPlugin {
                 public void run() {
                     AdministrativeService service = Context.getInstance(AdministrativeService.class);
                     service.downloadCohortPatients(cohortUuid);
-
-                    try {
-                        PatientConverter converter = new PatientConverter();
-                        PatientService patientService = Context.getInstance(PatientService.class);
-                        List<Patient> patientList = patientService.getAllPatients();
-                        callbackContext.success(converter.serialize(patientList));
-                    } catch (JSONException e) {
-                        callbackContext.error("Serializing patients failed!");
-                        Log.i(TAG, "Serializing patients failed!", e);
-                    }
+                    callbackContext.success("Patients downloaded!");
                 }
             });
         } else if (StringUtil.equals(action, "downloadAllObservations")) {
@@ -116,19 +99,7 @@ public class AdminPlugin extends MuzimaPlugin {
                 public void run() {
                     AdministrativeService service = Context.getInstance(AdministrativeService.class);
                     service.downloadObservations(patientUuid);
-
-                    try {
-                        ObservationConverter converter = new ObservationConverter ();
-                        PatientService patientService = Context.getInstance(PatientService.class);
-                        ObservationService observationService = Context.getInstance(ObservationService.class);
-
-                        Patient patient = patientService.getPatientByUuid(patientUuid);
-                        List<Observation> observationList = observationService.getAllObservations(patient);
-                        callbackContext.success(converter.serialize(observationList));
-                    } catch (JSONException e) {
-                        callbackContext.error("Serializing observations failed!");
-                        Log.i(TAG, "Serializing observations failed!", e);
-                    }
+                    callbackContext.success("Observations downloaded!");
                 }
             });
         } else {

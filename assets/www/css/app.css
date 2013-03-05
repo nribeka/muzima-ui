@@ -1,10 +1,5 @@
 /* app css stylesheet */
 
-html,
-body {
-    padding-top: 40px;
-}
-
 .form-login {
   max-width: 300px;
   padding: 19px 29px 29px;
@@ -79,6 +74,16 @@ body {
   text-decoration: none;
 }
 
+@media (min-width: 979px) {
+    html,
+    body {
+        padding-top: 40px;
+    }
+}
+
+/*
+ * Position fixed is problematic on smaller screen. See this ticket:
+ * https://github.com/twitter/bootstrap/issues/1617
 @media (max-width: 979px) {
   .navbar-fixed-top,
   .navbar-fixed-bottom {
@@ -87,6 +92,7 @@ body {
     margin-right: 0;
   }
 }
+*/
 
 @media (max-width: 480px) {
   .media .pull-right{

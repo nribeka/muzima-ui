@@ -113,6 +113,14 @@ var forms = [
     }
 ];
 
+/**
+ * Controller for the login page.
+ * @param $scope
+ * @param $location
+ * @param $userService
+ * @param $authentication
+ * @constructor
+ */
 function LoginController($scope, $location, $userService, $authentication) {
     $scope.footer = false;
 
@@ -129,62 +137,119 @@ function LoginController($scope, $location, $userService, $authentication) {
 
     var error = function (message) {
         $scope.message = message;
+        console.log(message);
     }
 
     $scope.validate = function () {
         $userService.authenticate($scope.username, $scope.password,
-            "http://149.166.42.178:8081/openmrs-standalone",
+            "http://192.168.1.66:8081/openmrs-standalone",
             success, error);
     }
 }
 LoginController.$inject = ['$scope', '$location', '$userService', '$authentication'];
 
-
+/**
+ * Controller for the home page.
+ * @param $scope
+ * @param $userService
+ * @param $authentication
+ * @constructor
+ */
 function HomeController($scope, $userService, $authentication) {
-    var success = function (data) {
-        $scope.user = data;
+    $scope.footer = true;
+
+    var success = function (user) {
+        $scope.user = user;
     }
     var error = function (message) {
         $scope.message = message;
+        console.log(message);
     }
     $userService.getUserByUsername($authentication.username, success, error);
 }
 HomeController.$inject = ['$scope', '$userService', '$authentication'];
 
-function CohortController($scope, $cohortService) {
-    var success = function (data) {
-        $scope.user = data;
+/**
+ * Controller for the cohort list page.
+ * @param $scope
+ * @param $adminService
+ * @param $cohortService
+ * @constructor
+ */
+function CohortController($scope, $adminService, $cohortService) {
+    $scope.footer = true;
+
+    var success = function (message) {
+        console.log(message);
+        $cohortService.getAllCohorts(
+            function (cohorts) {
+                $scope.cohorts = cohorts;
+            }, function (message) {
+                $scope.message = message;
+                console.log(message);
+            }
+        );
     }
     var error = function (message) {
         $scope.message = message;
+        console.log(message);
     }
-    $cohortService.getAllCohorts(success, error);
+    $adminService.downloadAllCohorts(success, error);
 }
-CohortController.$inject = ['$scope', '$cohortService'];
+CohortController.$inject = ['$scope', '$adminService', '$cohortService'];
 
+/**
+ * Controller for the settings page.
+ * @param $scope
+ * @constructor
+ */
 function SettingController($scope) {
+    $scope.footer = true;
     $scope.message = "This message is sent from the setting controller, not from the html.";
 }
 SettingController.$inject = ['$scope'];
 
+/**
+ * Controller for the about page.
+ * @param $scope
+ * @constructor
+ */
 function AboutController($scope) {
+    $scope.footer = true;
     $scope.message = "This message is sent from the setting controller, not from the html.";
 }
 
-function PatientsController($scope, $routeParams) {
+/**
+ * Controller for the patient list page.
+ * @param $scope
+ * @param $routeParams
+ * @param $adminService
+ * @param $patientService
+ * @constructor
+ */
+function PatientsController($scope, $routeParams, $adminService, $patientService) {
+    $scope.footer = true;
+
     var uuid = $routeParams.uuid;
-    angular.forEach(cohorts, function (cohort) {
-        if (angular.equals(uuid, cohort.uuid)) {
-            $scope.name = cohort.name;
-            var cohortPatients = [];
-            angular.forEach(cohort_members[uuid], function (patientUuid) {
-                cohortPatients.push(patients[patientUuid])
-            });
-            $scope.patients = cohortPatients;
-        }
-    });
+    var success = function (message) {
+        console.log(message);
+        $patientService.getPatientsByCohort(
+            uuid,
+            function(patients) {
+                $scope.patients = patients;
+            }, function (message) {
+                $scope.message = message;
+                console.log(message);
+            }
+        )
+    }
+    var error = function (message) {
+        $scope.message = message;
+        console.log(message);
+    }
+    $adminService.downloadPatientsForCohort(uuid, success, error);
 }
-PatientsController.$inject = ['$scope', '$routeParams'];
+PatientsController.$inject = ['$scope', '$routeParams', '$adminService', '$patientService'];
 
 function PatientController($scope, $routeParams) {
     var uuid = $routeParams.uuid;
