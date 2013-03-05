@@ -26,17 +26,17 @@
 </div>
 <div class="container">
     <div class="page-header">
-        <h3>{{name}} Members</h3>
+        <h3>{{cohort.name}} Members</h3>
     </div>
     <div>
         <ul class="muzima-list">
             <li class="media" ng-repeat="patient in patients">
                 <a href="#/patient/{{patient.uuid}}" class="pull-left">
             <span ng-switch on="patient.gender">
-                <span class="pull-left" ng-switch-when="Female">
+                <span class="pull-left" ng-switch-when="F">
                     <img src="img/female.svg" width="50px" class="media-object img-rounded">
                 </span>
-                <span class="pull-left" ng-switch-when="Male">
+                <span class="pull-left" ng-switch-when="M">
                     <img src="img/male.svg" width="50px" class="media-object img-rounded">
                 </span>
             </span>
@@ -45,7 +45,7 @@
                 <div class="media-body">
                     <a href="#/patient/{{patient.uuid}}">
                         <h4 class="media-heading">{{patient.identifier}}</h4>
-                        {{patient.givenName}} {{patient.middleName}} {{patient.familyName}}
+                        {{patient.name}}
                         <i class="icon-chevron-right"></i>
                     </a>
                 </div>
@@ -54,4 +54,3 @@
         <span>Available patients: {{patients.length}}</span>
     </div>
 </div>
-<div id="push"></div>

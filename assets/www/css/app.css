@@ -1,5 +1,9 @@
 /* app css stylesheet */
 
+body {
+    padding-top: 40px;
+}
+
 .form-login {
   max-width: 300px;
   padding: 19px 29px 29px;
@@ -12,21 +16,6 @@
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
   box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
-}
-
-/* Wrapper for page content to push down footer */
-#wrap {
-  min-height: 100%;
-  height: auto !important;
-  height: 100%;
-  /* Negative indent footer by it's height */
-  margin: 0 auto -100px;
-}
-
-/* Set the fixed height of the footer here */
-#push,
-#footer {
-  height: 100px;
 }
 
 #footer-content {
@@ -84,6 +73,7 @@
 /*
  * Position fixed is problematic on smaller screen. See this ticket:
  * https://github.com/twitter/bootstrap/issues/1617
+ */
 @media (max-width: 979px) {
   .navbar-fixed-top,
   .navbar-fixed-bottom {
@@ -92,7 +82,6 @@
     margin-right: 0;
   }
 }
-*/
 
 @media (max-width: 480px) {
   .media .pull-right{
