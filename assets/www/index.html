@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="css/bootstrap-responsive.css"/>
     <link rel="stylesheet" href="css/app.css"/>
 </head>
-<body class="fixed-top">
+<body>
 
 <!-- Begin page content -->
 <div id="wrap" ng-view></div>
 
-<div id="footer-content">
+<div id="footer-content" ng-show="footer">
     <div class="container">
         <p class="muted credit">
             <small>Copyright &copy; <a>Muzima Team</a> 2013</small>
@@ -42,10 +42,13 @@
 <script src="lib/bootstrap/bootstrap-typeahead.js"></script>
 <script src="lib/bootstrap/bootstrap-carousel.js"></script>
 
+<script src="lib/cordova/cordova-2.5.0.js"></script>
+
 <script src="lib/underscore/underscore.js"></script>
 <script src="lib/jsonform/jsonform.js"></script>
 
 <script src="lib/angular/angular.js"></script>
+<script src="js/muzima.js"></script>
 <script src="js/app.js"></script>
 <script src="js/services.js"></script>
 <script src="js/controllers.js"></script>

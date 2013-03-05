@@ -45,15 +45,15 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
             })
         }
     }).
-    factory('$cohortService',function ($rootScope, deviceReady) {
+    factory('$cohortService',function ($rootScope, $deviceReady) {
         return {
-            getAllCohorts: deviceReady(function (successCallback, errorCallback) {
+            getAllCohorts: $deviceReady(function (successCallback, errorCallback) {
                 cohortService.getAllCohorts(successCallback, errorCallback);
             }),
-            getCohortsByName: deviceReady(function (name, successCallback, errorCallback) {
+            getCohortsByName: $deviceReady(function (name, successCallback, errorCallback) {
                 cohortService.getCohortsByName(name, successCallback, errorCallback);
             }),
-            getCohortByUuid: deviceReady(function (uuid, successCallback, errorCallback) {
+            getCohortByUuid: $deviceReady(function (uuid, successCallback, errorCallback) {
                 cohortService.getCohortByUuid(uuid, successCallback, errorCallback);
             })
         }
@@ -68,7 +68,7 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
     run(function ($rootScope, $location, $authentication) {
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             console.log("Route changes executed");
-            if ($authentication.authenticated && next.templateUrl != 'partials/login.html') {
+            if (!$authentication.authenticated && next.templateUrl != 'partials/login.html') {
                 $location.path("/login");
             }
         })

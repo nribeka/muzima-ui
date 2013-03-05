@@ -114,6 +114,8 @@ var forms = [
 ];
 
 function LoginController($scope, $location, $userService, $authentication) {
+    $scope.footer = false;
+
     var updateAuthentication = function (username, password, authenticated) {
         $authentication.username = username;
         $authentication.password = password;
@@ -145,7 +147,7 @@ function HomeController($scope, $userService, $authentication) {
     var error = function (message) {
         $scope.message = message;
     }
-    $userService.getUserByUsername(authentication.username, success, error);
+    $userService.getUserByUsername($authentication.username, success, error);
 }
 HomeController.$inject = ['$scope', '$userService', '$authentication'];
 
@@ -163,7 +165,7 @@ CohortController.$inject = ['$scope', '$cohortService'];
 function SettingController($scope) {
     $scope.message = "This message is sent from the setting controller, not from the html.";
 }
-SettingController.$inject = ['$scope', '$setting'];
+SettingController.$inject = ['$scope'];
 
 function AboutController($scope) {
     $scope.message = "This message is sent from the setting controller, not from the html.";
