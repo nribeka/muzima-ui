@@ -70,6 +70,16 @@ body {
     }
 }
 
+.loading {
+    top: 50%;
+    height: 10em;
+    margin-top: -5em;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
 /*
  * Position fixed is problematic on smaller screen. See this ticket:
  * https://github.com/twitter/bootstrap/issues/1617
@@ -96,5 +106,19 @@ body {
   }
   .search-query {
     width: 100px;
+  }
+
+  .male-image {
+    background-size: auto;
+    background: url(../img/male.png);
+    width: 0px;
+    height: 0px;
+  }
+
+  .female-image {
+    background-size: auto;
+    background: url(../img/female.png);
+    width: 0px;
+    height: 0px;
   }
 }

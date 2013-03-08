@@ -25,18 +25,30 @@
     </div>
 </div>
 <div class="container">
-    <div class="page-header">
-        <h3>Available Cohorts</h3>
+    <div class="modal loading" ng-show="loading">
+        <div class="modal-header">
+            <h5 id="header">Downloading cohorts ...</h5>
+        </div>
+        <div class="modal-body">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 100%;"></div>
+            </div>
+        </div>
     </div>
-    <div>
-        <ul class="nav nav-tabs nav-stacked">
-            <li ng-repeat="cohort in cohorts">
-                <a href="#/patients/{{cohort.uuid}}">
-                    {{cohort.name}}
-                    <i class="icon-chevron-right"></i>
-                </a>
-            </li>
-        </ul>
-        <span ng-cloak>Available cohorts: {{cohorts.length}}</span>
+    <div class="container" ng-hide="loading">
+        <div class="page-header">
+            <h3>Available Cohorts</h3>
+        </div>
+        <div>
+            <ul class="nav nav-tabs nav-stacked">
+                <li ng-repeat="cohort in cohorts">
+                    <a href="#/patients/{{cohort.uuid}}">
+                        {{cohort.name}}
+                        <i class="icon-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+            <span ng-cloak>Available cohorts: {{cohorts.length}}</span>
+        </div>
     </div>
 </div>

@@ -122,27 +122,21 @@ var forms = [
  * @constructor
  */
 function LoginController($scope, $location, $userService, $authentication) {
-
+    var handleFailure = function (message) {
+        $scope.message = message;
+    }
     var updateAuthentication = function (username, password, authenticated) {
         $authentication.username = username;
         $authentication.password = password;
         $authentication.authenticated = authenticated;
     }
-
-    var success = function () {
+    var handleAuthenticationSuccess = function () {
         updateAuthentication($scope.username, $scope.password, true);
         $location.path("/home");
     }
-
-    var error = function (message) {
-        $scope.message = message;
-        console.log(message);
-    }
-
     $scope.validate = function () {
         $userService.authenticate($scope.username, $scope.password,
-            "http://192.168.1.66:8081/openmrs-standalone",
-            success, error);
+            "http://192.168.1.74:8081/openmrs-standalone", handleAuthenticationSuccess, handleFailure);
     }
 }
 LoginController.$inject = ['$scope', '$location', '$userService', '$authentication'];
@@ -155,14 +149,13 @@ LoginController.$inject = ['$scope', '$location', '$userService', '$authenticati
  * @constructor
  */
 function HomeController($scope, $userService, $authentication) {
-    var success = function (user) {
+    var handleFailure = function (message) {
+        $scope.message = message;
+    }
+    var handleSearchUser = function (user) {
         $scope.user = user;
     }
-    var error = function (message) {
-        $scope.message = message;
-        console.log(message);
-    }
-    $userService.getUserByUsername($authentication.username, success, error);
+    $userService.getUserByUsername($authentication.username, handleSearchUser, handleFailure);
 }
 HomeController.$inject = ['$scope', '$userService', '$authentication'];
 
@@ -174,34 +167,32 @@ HomeController.$inject = ['$scope', '$userService', '$authentication'];
  * @constructor
  */
 function CohortController($scope, $adminService, $cohortService) {
-    var success = function (message) {
-        console.log(message);
-        $cohortService.getAllCohorts(
-            function (cohorts) {
-                $scope.cohorts = cohorts;
-            }, function (message) {
-                $scope.message = message;
-                console.log(message);
-            }
-        );
-    }
-    var error = function (message) {
+    $scope.loading = true;
+    var handleFailure = function (message) {
         $scope.message = message;
-        console.log(message);
     }
-    $adminService.downloadAllCohorts(success, error);
+    var handleSearchCohort = function (cohorts) {
+        $scope.cohorts = cohorts;
+    }
+    var handleDownloadCohort = function () {
+        $cohortService.getAllCohorts(handleSearchCohort, handleFailure);
+        $scope.loading = false;
+    }
+    $adminService.downloadAllCohorts(handleDownloadCohort);
 }
 CohortController.$inject = ['$scope', '$adminService', '$cohortService'];
 
 /**
  * Controller for the settings page.
  * @param $scope
+ * @param $authentication
  * @constructor
  */
-function SettingController($scope) {
+function SettingController($scope, $authentication) {
+    $scope.authenticated = $authentication.authenticated;
     $scope.message = "This message is sent from the setting controller, not from the html.";
 }
-SettingController.$inject = ['$scope'];
+SettingController.$inject = ['$scope', '$authentication'];
 
 /**
  * Controller for the about page.
@@ -222,49 +213,67 @@ function AboutController($scope) {
  * @constructor
  */
 function PatientsController($scope, $routeParams, $adminService, $cohortService, $patientService) {
-    var uuid = $routeParams.uuid;
-    $cohortService.getCohortByUuid(
-        uuid,
-        function(cohort) {
-            $scope.cohort = cohort;
-        }, function(message) {
-            $scope.message = message;
-            console.log(message);
-        }
-    );
+    $scope.loading = true;
 
-    var success = function (message) {
-        console.log(message);
-        $patientService.getPatientsByCohort(
-            uuid,
-            function(patients) {
-                $scope.patients = patients;
-            }, function (message) {
-                $scope.message = message;
-                console.log(message);
-            }
-        )
-    }
-    var error = function (message) {
+    var uuid = $routeParams.uuid;
+    var handleFailure = function(message) {
         $scope.message = message;
-        console.log(message);
     }
-    $adminService.downloadPatientsForCohort(uuid, success, error);
+
+    var handleSearchCohort = function(cohort) {
+        $scope.cohort = cohort;
+    }
+    $cohortService.getCohortByUuid(uuid, handleSearchCohort, handleFailure);
+
+    var handleSearchPatients = function (patients) {
+        $scope.patients = patients;
+    }
+    var handleDownloadPatients = function () {
+        $patientService.getPatientsByCohort(uuid, handleSearchPatients, handleFailure);
+        $scope.loading = false;
+    }
+    $adminService.downloadPatientsForCohort(uuid, handleDownloadPatients);
 }
 PatientsController.$inject = ['$scope', '$routeParams', '$adminService', '$cohortService', '$patientService'];
 
-function PatientController($scope, $routeParams) {
-    var uuid = $routeParams.uuid;
-    $scope.patient = patients[uuid];
+function PatientController($scope, $routeParams, $patientService) {
+    var patientUuid = $routeParams.uuid;
+    var handleFailure = function(message) {
+        $scope.message = message;
+    }
+    var handleSearchPatient = function(patient) {
+        $scope.patient = patient;
+    }
+    $patientService.getPatientByUuid(patientUuid, handleSearchPatient, handleFailure);
 }
-PatientController.$inject = ['$scope', '$routeParams'];
+PatientController.$inject = ['$scope', '$routeParams', '$patientService'];
 
-function ObservationController($scope, $routeParams) {
-    var uuid = $routeParams.uuid;
-    $scope.patient = patients[uuid];
-    $scope.observations = observations;
+function ObservationController($scope, $routeParams, $adminService, $patientService, $observationService) {
+    $scope.loading = true;
+
+    var handleFailure = function(message) {
+        $scope.message = message;
+    }
+
+    var patient = null;
+    var patientUuid = $routeParams.uuid;
+    var handleSearchPatient = function(result) {
+        $scope.patient = patient = result;
+    }
+    $patientService.getPatientByUuid(patientUuid, handleSearchPatient, handleFailure);
+
+    if (patient != null) {
+        var handleSearchObservations = function(observations) {
+            $scope.observations = observations;
+        }
+        var handleDownloadObservations = function() {
+            $observationService.getObservationsForPatient(patientUuid, handleSearchObservations, handleFailure);
+            $scope.loading = false;
+        }
+        $adminService.downloadObservationsForPatient(patientUuid, handleDownloadObservations);
+    }
 }
-ObservationController.$inject = ['$scope', '$routeParams'];
+ObservationController.$inject = ['$scope', '$routeParams', '$adminService', '$patientService', '$observationService'];
 
 function SummaryController($scope, $routeParams) {
     var uuid = $routeParams.uuid;

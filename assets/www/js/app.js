@@ -24,19 +24,21 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
             var impl = function () {
                 queue.push(Array.prototype.slice.call(arguments));
             };
+
             document.addEventListener('deviceready', function () {
                 queue.forEach(function (args) {
                     fn.apply(this, args);
                 });
                 impl = fn;
             }, false);
+
             return function () {
                 return impl.apply(this, arguments);
             };
         };
     }).
     factory('$adminService',function ($rootScope, $deviceReady) {
-        var applyCallback = function(callback) {
+        var applyCallback = function (callback) {
             return function () {
                 var that = this,
                     args = arguments;
@@ -48,27 +50,27 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
             }
         }
         return {
-            downloadAllForms: $deviceReady(function (successCallback, errorCallback) {
+            downloadAllForms: $deviceReady(function (successCallback) {
                 adminService.downloadAllForms(
                     applyCallback(successCallback),
-                    applyCallback(errorCallback));
+                    applyCallback(successCallback));
             }),
-            downloadAllCohorts: $deviceReady(function (successCallback, errorCallback) {
+            downloadAllCohorts: $deviceReady(function (successCallback) {
                 adminService.downloadAllCohorts(
                     applyCallback(successCallback),
-                    applyCallback(errorCallback));
+                    applyCallback(successCallback));
             }),
-            downloadPatientsForCohort: $deviceReady(function (cohortUuid, successCallback, errorCallback) {
+            downloadPatientsForCohort: $deviceReady(function (cohortUuid, successCallback) {
                 adminService.downloadPatientsForCohort(
                     cohortUuid,
                     applyCallback(successCallback),
-                    applyCallback(errorCallback));
+                    applyCallback(successCallback));
             }),
-            downloadObservationsForPatient: $deviceReady(function (patientUuid, successCallback, errorCallback) {
+            downloadObservationsForPatient: $deviceReady(function (patientUuid, successCallback) {
                 adminService.downloadObservationsForPatient(
                     patientUuid,
                     applyCallback(successCallback),
-                    applyCallback(errorCallback));
+                    applyCallback(successCallback));
             })
         }
     }).
@@ -114,6 +116,19 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
             })
         }
     }).
+    factory('$observationService',function ($rootScope, $deviceReady) {
+        return {
+            getObservationsForPatient: $deviceReady(function (patientUuid, successCallback, errorCallback) {
+                observationService.getObservationsForPatient(patientUuid, successCallback, errorCallback);
+            }),
+            searchObservationsForPatient: $deviceReady(function (patientUuid, term, successCallback, errorCallback) {
+                observationService.searchObservationsForPatient(patientUuid, term, successCallback, errorCallback);
+            }),
+            getObservationByUuid: $deviceReady(function (observationUuid, successCallback, errorCallback) {
+                observationService.getObservationByUuid(observationUuid, successCallback, errorCallback);
+            })
+        }
+    }).
     factory('$authentication',function () {
         var authentication = {};
         authentication.username = null;
@@ -123,9 +138,11 @@ angular.module('muzima', ['muzima.services', 'muzima.directives', 'muzima.filter
     }).
     run(function ($rootScope, $location, $authentication) {
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
-            console.log("Route changes executed");
-            if (!$authentication.authenticated && next.templateUrl != 'partials/login.html') {
-                $location.path("/login");
+            console.log("Executing route changes from: " + current.templateUrl + " to: " + next.templateUrl + "!");
+            if (next.templateUrl != 'partials/settings.html') {
+                if (!$authentication.authenticated && next.templateUrl != 'partials/login.html') {
+                    $location.path("/login");
+                }
             }
         })
     });

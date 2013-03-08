@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class ObservationConverter {
 
     public JSONObject serialize(final Observation observation) throws JSONException {
-        String dateFormat = "dd-MMM-yyyy HH:mm:ss";
+        String dateFormat = "dd-MMM-yyyy";
         DateFormat format = new SimpleDateFormat(dateFormat);
 
         JSONObject object = new JSONObject();

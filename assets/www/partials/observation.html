@@ -25,43 +25,55 @@
     </div>
 </div>
 <div class="container">
-    <div class="page-header">
-        <h4>{{patient.givenName}} {{patient.middleName}} {{patient.familyName}}</h4>
-
-        <div class="btn-group pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                Action
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a href="#/patient/{{patient.uuid}}">View Demographic</a></li>
-                <li><a href="#/observation/{{patient.uuid}}">View Observation</a></li>
-                <li><a href="#/summary/{{patient.uuid}}">View Summary</a></li>
-                <li class="divider"></li>
-                <li><a href="#/reminder/{{patient.uuid}}">View Reminder</a></li>
-                <li class="divider"></li>
-                <li><a href="#/forms/{{patient.uuid}}">Fill Form</a></li>
-            </ul>
+    <div class="modal loading" ng-show="loading">
+        <div class="modal-header">
+            <h5 id="header">Downloading observations ...</h5>
+        </div>
+        <div class="modal-body">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 100%;"></div>
+            </div>
         </div>
     </div>
-    <div class="media">
-        <div class="media-body">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <td>Date</td>
-                    <td>Name</td>
-                    <td>Value</td>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="observation in observations">
-                    <td>{{observation.datetime}}</td>
-                    <td>{{observation.name}}</td>
-                    <td>{{observation.value}}</td>
-                </tr>
-                </tbody>
-            </table>
+    <div class="container" ng-hide="loading">
+        <div class="page-header">
+            <h4>{{patient.name}}</h4>
+
+            <div class="btn-group pull-right">
+                <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                    Action
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#/patient/{{patient.uuid}}">View Demographic</a></li>
+                    <li><a href="#/observation/{{patient.uuid}}">View Observation</a></li>
+                    <li><a href="#/summary/{{patient.uuid}}">View Summary</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#/reminder/{{patient.uuid}}">View Reminder</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#/forms/{{patient.uuid}}">Fill Form</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="media">
+            <div class="media-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <td>Date</td>
+                        <td>Name</td>
+                        <td>Value</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="observation in observations">
+                        <td class="nowrap">{{observation.observationDate}}</td>
+                        <td>{{observation.fieldName}}</td>
+                        <td>{{observation.value}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>

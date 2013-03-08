@@ -26,7 +26,7 @@
 </div>
 <div class="container">
     <div class="page-header">
-        <h4>{{patient.givenName}} {{patient.middleName}} {{patient.familyName}}</h4>
+        <h4>{{patient.name}}</h4>
 
         <div class="btn-group pull-right">
             <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -46,18 +46,21 @@
     </div>
     <div class="media">
         <a class="pull-left" ng-switch on="patient.gender">
-            <span ng-switch-when="Female">
-                <img src="img/female.svg" class="media-object img-polaroid">
+            <span ng-switch-when="F">
+                <img src="img/female.png" class="media-object img-polaroid">
             </span>
-            <span ng-switch-when="Male">
-                <img src="img/male.svg" class="media-object img-polaroid">
+            <span ng-switch-when="M">
+                <img src="img/male.png" class="media-object img-polaroid">
             </span>
         </a>
 
         <div class="media-body">
             <table class="table ">
                 <tr>
-                    <td>{{patient.birth}}</td>
+                    <td>{{patient.identifier}}</td>
+                </tr>
+                <tr>
+                    <td>{{patient.birthdate}}</td>
                 </tr>
                 <tr>
                     <td>{{patient.gender}}</td>

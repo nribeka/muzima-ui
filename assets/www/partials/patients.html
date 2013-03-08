@@ -25,32 +25,44 @@
     </div>
 </div>
 <div class="container">
-    <div class="page-header">
-        <h3>{{cohort.name}} Members</h3>
+    <div class="modal loading" ng-show="loading">
+        <div class="modal-header">
+            <h5 id="header">Downloading patients ...</h5>
+        </div>
+        <div class="modal-body">
+            <div class="progress progress-striped active">
+                <div class="bar" style="width: 100%;"></div>
+            </div>
+        </div>
     </div>
-    <div>
-        <ul class="muzima-list">
-            <li class="media" ng-repeat="patient in patients">
-                <a href="#/patient/{{patient.uuid}}" class="pull-left">
+    <div class="container" ng-hide="loading">
+        <div class="page-header">
+            <h3>{{cohort.name}} Members</h3>
+        </div>
+        <div>
+            <ul class="muzima-list">
+                <li class="media" ng-repeat="patient in patients">
+                    <a href="#/patient/{{patient.uuid}}" class="pull-left">
             <span ng-switch on="patient.gender">
                 <span class="pull-left" ng-switch-when="F">
-                    <img src="img/female.svg" width="50px" class="media-object img-rounded">
+                    <img src="img/female.png" width="50px" class="media-object img-rounded">
                 </span>
                 <span class="pull-left" ng-switch-when="M">
-                    <img src="img/male.svg" width="50px" class="media-object img-rounded">
+                    <img src="img/male.png" width="50px" class="media-object img-rounded">
                 </span>
             </span>
-                </a>
-
-                <div class="media-body">
-                    <a href="#/patient/{{patient.uuid}}">
-                        <h4 class="media-heading">{{patient.identifier}}</h4>
-                        {{patient.name}}
-                        <i class="icon-chevron-right"></i>
                     </a>
-                </div>
-            </li>
-        </ul>
-        <span>Available patients: {{patients.length}}</span>
+
+                    <div class="media-body">
+                        <a href="#/patient/{{patient.uuid}}">
+                            <h4 class="media-heading">{{patient.identifier}}</h4>
+                            {{patient.name}}
+                            <i class="icon-chevron-right"></i>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <span>Available patients: {{patients.length}}</span>
+        </div>
     </div>
 </div>
